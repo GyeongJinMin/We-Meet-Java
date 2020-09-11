@@ -28,6 +28,7 @@ public class scheduleAppServer {// ڵ
 	Statement stmt = null;
 
 	ResultSet rs = null;
+	ResultSet res = null;
 	String sql = "";
 	String sql2 = "";
 	String sql3 = ""; // 추가
@@ -36,15 +37,12 @@ public class scheduleAppServer {// ڵ
 	String returns2 = "";
 	String returns3 = "";
 	StringBuilder sb = new StringBuilder();
-	StringBuilder sb2 = new StringBuilder();
 	final int FRIEND_STATUS = 1;
 	final int REQUEST_STATUS = 0; // 나에게 친구요청한 경우
 	final int WAITING_STATUS = -1; // 내가 친구요청한 경우
 
 	public String joindb(String id, String pwd, String name) {
 		try {
-			sb = new StringBuilder();
-			sb2 = new StringBuilder();
 			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
 			if (id.equals("")) {
@@ -75,6 +73,7 @@ public class scheduleAppServer {// ڵ
 
 					stmt = conn.createStatement();
 					
+					sb = new StringBuilder();
 					sql3 = sb.append("create table calendar_").append(id).append("( id char(15) NOT NULL, ")
 							.append("date date NOT NULL, ").append("schedule varchar(80), ").append("memo text, ")
 							.append("foreign key(id) references user(id), ").append("primary key(id, date, schedule));")
@@ -82,7 +81,8 @@ public class scheduleAppServer {// ڵ
 
 					stmt.execute(sql3);
 
-					sql4 = sb2.append("create table friends_").append(id).append("( id char(15) NOT NULL, ")
+					sb = new StringBuilder();
+					sql4 = sb.append("create table friends_").append(id).append("( id char(15) NOT NULL, ")
 							.append("name char(10) NOT NULL, ").append("status int(1) NOT NULL,").append("foreign key(id) references user(id), ")
 							.append("primary key(id));").toString();
 					pstmt3 = conn.prepareStatement(sql4);
@@ -346,7 +346,183 @@ public class scheduleAppServer {// ڵ
 		return returns3;
 	}
 
-	public String loadSchedule() {
+	public String loadSchedule(String sche_id) {
+		returns = "";
+		try {
+			sb = new StringBuilder();
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
+			sql = "select * from schedule where schedule_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, sche_id);
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				returns += rs.getString("schedule_name") + "\t" + rs.getDate("date") + "\t" + rs.getString("location")
+						+ "\t" + rs.getString("participants") + "\t";
+
+			}
+
+		} catch (Exception e) {
+
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return returns;
+
+	}
+	
+	public String setDate(String sche_id, String date) {
+		returns3 = "";
+
+		try {
+			sb = new StringBuilder();
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
+
+			sql = sb.append("update schedule set date = ? where schedule_id =?").toString();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, date);
+			pstmt.setString(2, sche_id);
+
+			pstmt.executeUpdate();
+
+			returns3 = "done";
+
+		} catch (
+
+		Exception e) {
+
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt2 != null)
+				try {
+					pstmt2.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return returns3;
+	}
+
+	public String setLocation(String sche_id, String location) {
+		returns3 = "";
+
+		try {
+			sb = new StringBuilder();
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
+
+			sql = sb.append("update schedule set location = ? where schedule_id =?").toString();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, location);
+			pstmt.setString(2, sche_id);
+
+			pstmt.executeUpdate();
+
+			returns3 = "done";
+
+		} catch (Exception e) {
+
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt2 != null)
+				try {
+					pstmt2.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return returns3;
+	}
+
+	public String modiScheduleName(String sche_id, String new_sche_name) {
+		returns3 = "";
+
+		try {
+			sb = new StringBuilder();
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
+
+			sql = sb.append("update schedule set schedule_name = ? where schedule_id =?").toString();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, new_sche_name);
+			pstmt.setString(2, sche_id);
+
+			pstmt.executeUpdate();
+
+			returns3 = "done";
+
+		} catch (
+
+		Exception e) {
+
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt2 != null)
+				try {
+					pstmt2.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return returns3;
+	}
+
+	public String loadAllSchedule() {
 		returns = "";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -378,71 +554,112 @@ public class scheduleAppServer {// ڵ
 				} catch (SQLException ex) {
 				}
 		}
-		System.out.println(returns);
 		return returns;
 
 	}
 	
-	public String addSchedule(String id, String sche_name, String date, String location,String participants) {
+	public String deleteSchedule(String sche_id) {
+		returns = "";
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
+			sql = "delete from schedule where schedule_id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, sche_id);
 
-	      returns3 = "";
-	      int cnt = 0;
-	      
-	      System.out.println(id);
-	      System.out.println(sche_name); //자꾸  null이 들어옴
+			pstmt.executeUpdate();
 
-	      try {
-	         sb = new StringBuilder();
-	         Class.forName("com.mysql.jdbc.Driver");
-	         conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
-	         pstmt = conn.prepareStatement("select count(*) from schedule");
-	         rs = pstmt.executeQuery();
-	         if (rs.next()) {
-	            System.out.println(rs.getInt(1));
-	            cnt = rs.getInt(1); ++cnt;
-	         } else
-	            System.out.println("????");
-	         System.out.println(cnt);
-	         sql = sb.append("insert into schedule(schedule_id, id, schedule_name)").append(" values(?,?,?) ").toString();
-	         System.out.println("insert");
-	         pstmt = conn.prepareStatement(sql);
-	         pstmt.setInt(1, cnt);
-	         pstmt.setString(2, id);
-	         pstmt.setString(3, sche_name);
-	         System.out.println(pstmt);
+		} catch (Exception e) {
 
-	         pstmt.executeUpdate();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (SQLException ex) {
+				}
+		}
+		return returns;
 
-	         returns3 = "success";
-
-	      } catch (Exception e) {
-
-	      } finally {
-	         if (rs != null)
-	            try {
-	               rs.close();
-	            } catch (SQLException ex) {
-	            }
-	         if (pstmt != null)
-	            try {
-	               pstmt.close();
-	            } catch (SQLException ex) {
-	            }
-	         if (conn != null)
-	            try {
-	               conn.close();
-	            } catch (SQLException ex) {
-	            }
-	         if (pstmt2 != null)
-	            try {
-	               pstmt2.close();
-	            } catch (SQLException ex) {
-	            }
-	      }
-	      System.out.println(returns3);
-	      return returns3;
-	   }
+	}
 	
+	public String addSchedule(String id, String sche_name) {
+
+		returns3 = "";
+		int cnt = 0;
+		try {
+			sb = new StringBuilder();
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection(jdbc_url, dbId, dbPw);
+			pstmt = conn.prepareStatement("select count(*) from schedule");
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				cnt = rs.getInt(1);
+				cnt++;
+				
+				pstmt2 = conn.prepareStatement("select schedule_id from schedule where schedule_id = ?");
+				pstmt2.setInt(1, cnt);
+				res = pstmt2.executeQuery();
+
+				while (res.next()) {
+					if (cnt == res.getInt(1)) {
+						pstmt2 = conn.prepareStatement("select schedule_id from schedule where schedule_id = ?");
+						pstmt2.setInt(1, cnt);
+						res = pstmt2.executeQuery();
+					}
+					cnt++;
+				}
+				
+			}
+			sql = sb.append("insert into schedule(schedule_id, id, schedule_name)").append(" values(?,?,?) ")
+					.toString();
+			System.out.println("insert");
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cnt);
+			pstmt.setString(2, id);
+			pstmt.setString(3, sche_name);
+
+			pstmt.executeUpdate();
+
+			returns3 = Integer.toString(cnt);
+
+		} catch (Exception e) {
+
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt != null)
+				try {
+					pstmt.close();
+				} catch (SQLException ex) {
+				}
+			if (conn != null)
+				try {
+					conn.close();
+				} catch (SQLException ex) {
+				}
+			if (pstmt2 != null)
+				try {
+					pstmt2.close();
+				} catch (SQLException ex) {
+				}
+		}
+
+		return returns3;
+	}
+
 	public String loadUser(String userId) {
 		returns = "";
 		try {

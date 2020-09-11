@@ -1,13 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="scheduleApp.scheduleAppServer"%>
-<%@ page import="scheduleApp.Schedule"%>
+   pageEncoding="UTF-8"%>
+<%@ page import = "scheduleApp.scheduleAppServer" %>
+<%@ page import = "scheduleApp.Schedule" %>
 <%
-	request.setCharacterEncoding("UTF-8");
-	String schedule_id = request.getParameter("sche_id");
-	String id = request.getParameter("id");
-	String schedule_name = request.getParameter("sche_name");
-	String type = request.getParameter("type");
-	//싱글톤 방식으로 자바 클래스를 불러옵니다.
-	scheduleAppServer connectDB = scheduleAppServer.getInstance();
+   request.setCharacterEncoding("UTF-8");
+   String schedule_id = request.getParameter("sche_id");
+   String id = request.getParameter("id");
+   String schedule_name = request.getParameter("sche_name");
+   String type = request.getParameter("type");
+   //싱글톤 방식으로 자바 클래스를 불러옵니다.
+   scheduleAppServer connectDB = scheduleAppServer.getInstance();  
 %>
