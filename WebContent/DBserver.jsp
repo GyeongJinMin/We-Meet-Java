@@ -2,9 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ page import="scheduleApp.scheduleAppServer"%>
 <%@ page import="scheduleApp.friendServer"%>
-<%@ page import="scheduleApp.Schedule"%>
-<%@ page import="java.util.ArrayList"%>
-
 <%
 	request.setCharacterEncoding("UTF-8");
 	String id = request.getParameter("id");
@@ -17,19 +14,24 @@
 	String old = request.getParameter("old");
 	String sche_name = request.getParameter("sche_name");
 	String sche_id = request.getParameter("sche_id");
+	String participants = request.getParameter("participants");
 	String location = request.getParameter("location");
 	String sche_date = request.getParameter("sche_date");
 	String old_sche_name = request.getParameter("old_sche_name");
 	String new_sche_name = request.getParameter("new_sche_name");
+	String latitude = request.getParameter("latitude");
+	String longitude = request.getParameter("longitude");
+	String sign = request.getParameter("sign");
+	String total_mem;
 	String friendName = request.getParameter("friendName");
-
+	
 	//싱글톤 방식으로 자바 클래스를 불러옵니다.
 	scheduleAppServer connectDB = scheduleAppServer.getInstance();
 	if (type.equals("login")) {
 		String returns = connectDB.logindb(id, pwd);
 		out.print(returns);
 	} else if (type.equals("join")) {
-		String returns = connectDB.joindb(id, pwd, name);
+		String returns = connectDB.joindb(id, pwd, name, latitude, longitude);
 		out.print(returns);
 	} else if (type.equals("calendar_main")) {
 		String returns = connectDB.calendardb(id, date, schedule, memo);
@@ -59,9 +61,50 @@
 		String returns = connectDB.deleteSchedule(sche_id);
 		out.print(returns);
 	} else if (type.equals("addSche")) {
-		String returns = connectDB.addSchedule(id, sche_name);
+		String returns = connectDB.addSchedule(id, sche_name, participants);
 		out.print(returns);
-	} 
+	} else if (type.equals("joinAddress")){%>
+	   
+    <jsp:forward page="address.jsp"/>
+<%
+	} else if (type.equals("addVote")) {
+		total_mem = "4";
+		String returns = connectDB.addVote(sche_id, sche_name, total_mem);
+		out.print(returns);
+	} else if (type.equals("modiVote")) {
+		String returns = connectDB.modiVoteName(sche_id, sche_name);
+		out.print(returns);
+	} else if (type.equals("loadDateVote")) {
+		String returns = connectDB.loadDateVote();
+		out.print(returns);
+	} else if (type.equals("setVoteDate")) {
+		String returns = connectDB.setVoteDate(sche_id, date);
+		out.print(returns);
+	} else if (type.equals("loadLocationVote")) {
+		String returns = connectDB.loadLocationVote();
+		out.print(returns);
+	} else if (type.equals("setVoteLocation")) {
+		String returns = connectDB.setVoteLocation(sche_id, location);
+		out.print(returns);
+	} else if (type.equals("voteDate")) {
+		String returns = connectDB.voteDate(sche_id, sign);
+		out.print(returns);
+	} else if (type.equals("voteLocation")) {
+		String returns = connectDB.voteLocation(sche_id, sign);
+		out.print(returns);
+	} else if (type.equals("initVoteLocation")) {
+		String returns = connectDB.initVoteLocation(sche_id);
+		out.print(returns);
+	} else if (type.equals("initVoteDate")) {
+		String returns = connectDB.initVoteDate(sche_id);
+		out.print(returns);
+	} else if (type.equals("loadParticipants")) {
+		String returns = connectDB.loadParticipants(sche_id);
+		out.print(returns);
+	} else if (type.equals("addParticipants")) {
+		String returns = connectDB.addParticipants(sche_id, friendName);
+		out.print(returns);
+	}
 	
 	friendServer friendDB = friendServer.getInstance();
 	if (type.equals("loadUser")) {
@@ -89,5 +132,4 @@
 		String returns = friendDB.friendRequest(id, friendName);
 		out.print(returns);
 	}
-	
 %>

@@ -9,5 +9,8 @@
    String schedule_name = request.getParameter("sche_name");
    String type = request.getParameter("type");
    //싱글톤 방식으로 자바 클래스를 불러옵니다.
-   scheduleAppServer connectDB = scheduleAppServer.getInstance();  
+   scheduleAppServer connectDB = scheduleAppServer.getInstance();
+   
+  
+  
 %>
