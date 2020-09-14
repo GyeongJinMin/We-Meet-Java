@@ -1,7 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="scheduleApp.scheduleAppServer"%>
+<%@ page import="scheduleApp.Schedule"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ page import="scheduleApp.friendServer"%>
+
+
 <%
 	request.setCharacterEncoding("UTF-8");
 	String id = request.getParameter("id");
@@ -14,7 +18,6 @@
 	String old = request.getParameter("old");
 	String sche_name = request.getParameter("sche_name");
 	String sche_id = request.getParameter("sche_id");
-	String participants = request.getParameter("participants");
 	String location = request.getParameter("location");
 	String sche_date = request.getParameter("sche_date");
 	String old_sche_name = request.getParameter("old_sche_name");
@@ -22,9 +25,8 @@
 	String latitude = request.getParameter("latitude");
 	String longitude = request.getParameter("longitude");
 	String sign = request.getParameter("sign");
-	String total_mem;
 	String friendName = request.getParameter("friendName");
-	
+	String total_mem;
 	//싱글톤 방식으로 자바 클래스를 불러옵니다.
 	scheduleAppServer connectDB = scheduleAppServer.getInstance();
 	if (type.equals("login")) {
@@ -61,11 +63,12 @@
 		String returns = connectDB.deleteSchedule(sche_id);
 		out.print(returns);
 	} else if (type.equals("addSche")) {
-		String returns = connectDB.addSchedule(id, sche_name, participants);
+		String returns = connectDB.addSchedule(id, sche_name);
 		out.print(returns);
-	} else if (type.equals("joinAddress")){%>
-	   
-    <jsp:forward page="address.jsp"/>
+	} else if (type.equals("joinAddress")) {
+%>
+
+<jsp:forward page="address.jsp" />
 <%
 	} else if (type.equals("addVote")) {
 		total_mem = "4";
@@ -98,14 +101,11 @@
 	} else if (type.equals("initVoteDate")) {
 		String returns = connectDB.initVoteDate(sche_id);
 		out.print(returns);
-	} else if (type.equals("loadParticipants")) {
-		String returns = connectDB.loadParticipants(sche_id);
-		out.print(returns);
-	} else if (type.equals("addParticipants")) {
-		String returns = connectDB.addParticipants(sche_id, friendName);
+	} else if (type.equals("loadPosition")) {
+		System.out.println("loadPosition" + sche_id);
+		String returns = connectDB.loadPosition(sche_id);
 		out.print(returns);
 	}
-	
 	friendServer friendDB = friendServer.getInstance();
 	if (type.equals("loadUser")) {
 		String returns = friendDB.loadUser(id);
@@ -130,6 +130,9 @@
 		out.print(returns);
 	} else if (type.equals("friendRequest")) {
 		String returns = friendDB.friendRequest(id, friendName);
+		out.print(returns);
+	} else if (type.equals("savePoint")) {
+		String returns = connectDB.savePoint(sche_id, latitude, longitude, location);
 		out.print(returns);
 	}
 %>
