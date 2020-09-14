@@ -18,6 +18,7 @@
 	String old = request.getParameter("old");
 	String sche_name = request.getParameter("sche_name");
 	String sche_id = request.getParameter("sche_id");
+	String participants = request.getParameter("participants");
 	String location = request.getParameter("location");
 	String sche_date = request.getParameter("sche_date");
 	String old_sche_name = request.getParameter("old_sche_name");
@@ -63,7 +64,13 @@
 		String returns = connectDB.deleteSchedule(sche_id);
 		out.print(returns);
 	} else if (type.equals("addSche")) {
-		String returns = connectDB.addSchedule(id, sche_name);
+		String returns = connectDB.addSchedule(id, sche_name, participants);
+		out.print(returns);
+	} else if (type.equals("loadParticipants")) {
+		String returns = connectDB.loadParticipants(sche_id);
+		out.print(returns);
+	} else if (type.equals("addParticipants")) {
+		String returns = connectDB.addParticipants(sche_id, friendName);
 		out.print(returns);
 	} else if (type.equals("joinAddress")) {
 %>
